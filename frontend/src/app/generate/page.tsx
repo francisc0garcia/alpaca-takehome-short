@@ -2,19 +2,43 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { generateNoteGenerateNotePost, saveNoteSaveNotePost} from "@/api_public/api"
 
 export default function GenerateNote() {
   const [observations, setObservations] = useState("");
   const [generatedNote, setGeneratedNote] = useState("");
 
   const handleGenerate = async () => {
-    // TODO: Implement API call to generate note
-    setGeneratedNote("Generated note will appear here...");
+    // TODO: Add fields for duration and type
+    const response = await generateNoteGenerateNotePost({ input_observations: observations, duration: 3600, type: "Some type session" });
+
+    if (response.data.error){
+      alert("Error: " + response.data.error);
+      return;
+    }
+
+    if(response.data.generated_note){
+      setGeneratedNote(response.data.generated_note);
+    }
+    else{
+      alert("Error: Invalid note returned");
+    }
   };
 
   const handleSave = async () => {
-    // TODO: Implement save functionality
-    alert("Save functionality to be implemented");
+    const response = await saveNoteSaveNotePost({ note: generatedNote, therapist_id: "Some therapist id" });
+
+    if(response.data.error){
+      alert("Error: " + response.data.error);
+      return;
+    }
+
+    if(response.data.success){
+      alert("Note saved successfully");
+    }
+    else{
+      alert("Error: Note not saved");
+    }
   };
 
   return (

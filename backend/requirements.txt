@@ -1,1 +1,4 @@
 fastapi==0.109.0
+fastapi-cli
+openai
+python-dotenv
